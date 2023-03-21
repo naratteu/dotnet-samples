@@ -7,35 +7,21 @@ const string ServiceName = ".NET Joke Service";
 
 if (args is { Length: 1 })
 {
-    string executablePath =
+    string executablePath = 
         Path.Combine(AppContext.BaseDirectory, "App.WindowsService.exe");
+    var sc = Cli.Wrap("sc");
 
-    if (args[0] is "/Install")
+    switch (args)
     {
-        await Cli.Wrap("sc")
-            .WithArguments(new[] { "create", ServiceName, $"binPath={executablePath}", "start=auto" })
-            .ExecuteAsync();
-
-        await Cli.Wrap("sc")
-            .WithArguments(new[] { "start", ServiceName })
-            .ExecuteAsync();
+        case ["/Install"]:
+            await sc.WithArguments(new[] { "create", ServiceName, $"binPath={executablePath}", "start=auto" }).ExecuteAsync();
+            await sc.WithArguments(new[] { "start", ServiceName }).ExecuteAsync();
+            return;
+        case ["/Uninstall"]:
+            try { await sc.WithArguments(new[] { "stop", ServiceName }).ExecuteAsync(); } catch { }
+            await sc.WithArguments(new[] { "delete", ServiceName }).ExecuteAsync();
+            return;
     }
-    else if (args[0] is "/Uninstall")
-    {
-        try
-        {
-            await Cli.Wrap("sc")
-                .WithArguments(new[] { "stop", ServiceName })
-                .ExecuteAsync();
-        }
-        catch { }
-
-        await Cli.Wrap("sc")
-            .WithArguments(new[] { "delete", ServiceName })
-            .ExecuteAsync();
-    }
-
-    return;
 }
 
 using IHost host = Host.CreateDefaultBuilder(args)

@@ -63,7 +63,7 @@
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
-        "Compression" = "3:2"
+        "Compression" = "3:3"
         "SignOutput" = "11:FALSE"
         "CertificateFile" = "8:"
         "PrivateKeyFile" = "8:"
@@ -71,7 +71,7 @@
         "InstallerBootstrapper" = "3:2"
             "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
             {
-            "Enabled" = "11:TRUE"
+            "Enabled" = "11:FALSE"
             "PromptEnabled" = "11:TRUE"
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
@@ -724,7 +724,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_A7730A47EAAB4F7F81E968F30D8EBB3A"
             {
-            "SourcePath" = "8:..\\..\\windows-service\\bin\\Release\\net7.0\\win-x64\\publish\\App.WindowsService.exe"
+            "SourcePath" = "8:..\\..\\windows-service\\bin\\Release\\net7.0-windows\\win-x64\\publish\\win-x64\\App.WindowsService.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_6A06B8D5AD394233B314F92E5CEC0E55"
