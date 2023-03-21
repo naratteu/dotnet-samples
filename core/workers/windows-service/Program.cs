@@ -15,12 +15,20 @@ if (args is { Length: 1 })
         await Cli.Wrap("sc")
             .WithArguments(new[] { "create", ServiceName, $"binPath={executablePath}", "start=auto" })
             .ExecuteAsync();
+
+        await Cli.Wrap("sc")
+            .WithArguments(new[] { "start", ServiceName })
+            .ExecuteAsync();
     }
     else if (args[0] is "/Uninstall")
     {
-        await Cli.Wrap("sc")
-            .WithArguments(new[] { "stop", ServiceName })
-            .ExecuteAsync();
+        try
+        {
+            await Cli.Wrap("sc")
+                .WithArguments(new[] { "stop", ServiceName })
+                .ExecuteAsync();
+        }
+        catch { }
 
         await Cli.Wrap("sc")
             .WithArguments(new[] { "delete", ServiceName })
