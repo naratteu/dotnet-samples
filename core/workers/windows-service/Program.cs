@@ -1,27 +1,21 @@
 ﻿using App.WindowsService;
 using Microsoft.Extensions.Logging.Configuration;
 using Microsoft.Extensions.Logging.EventLog;
-using CliWrap;
 
 const string ServiceName = ".NET Joke Service";
 
-if (args is { Length: 1 })
+switch (args)
 {
-    string executablePath = 
-        Path.Combine(AppContext.BaseDirectory, "App.WindowsService.exe");
-    var sc = Cli.Wrap("sc");
-
-    switch (args)
-    {
-        case ["/Install"]:
-            await sc.WithArguments(new[] { "create", ServiceName, $"binPath={executablePath}", "start=auto" }).ExecuteAsync();
-            await sc.WithArguments(new[] { "start", ServiceName }).ExecuteAsync();
-            return;
-        case ["/Uninstall"]:
-            try { await sc.WithArguments(new[] { "stop", ServiceName }).ExecuteAsync(); } catch { }
-            await sc.WithArguments(new[] { "delete", ServiceName }).ExecuteAsync();
-            return;
-    }
+    case ["/Install"]:
+        var bin = Path.Combine(AppContext.BaseDirectory, ServiceName + ".exe");
+        await sc("create", ServiceName, $"binPath={bin}", "start=auto");
+        await sc("start", ServiceName);
+        return;
+    case ["/Uninstall"]:
+        try { await sc("stop", ServiceName); } catch { }
+        await sc("delete", ServiceName);
+        return;
+        static Task sc(params string[] args) => CliWrap.Cli.Wrap("sc").WithArguments(args).ExecuteAsync();
 }
 
 using IHost host = Host.CreateDefaultBuilder(args)
